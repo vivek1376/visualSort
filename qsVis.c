@@ -1,6 +1,7 @@
 #include <GL/glut.h>
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 
 #ifndef FL_COLOR
 #define FL_COLOR(x) ((float)(x)/255.0f)
@@ -12,9 +13,10 @@ GLfloat angle=0.0;
 GLfloat pos=0.0;
 
 int done=0;
-int keyPress=0;
+int keyPress=0, pIndex=-1;
 
-unsigned long int num[]={10,4,6,20,10,7,2,14,9,4,5,20,11,2,7,13,1,3,19,4};
+//unsigned long int num[]={10,4,6,20,10,7,2,14,9,4,5,20,11,2,7,13,1,3,19,4};
+unsigned long int *num,count;//[]={10,4,6,20,10,7,2,14,9,4,5,20,11,2,7,13,1,3,19,4};
 
 void spin(void);
 void display(void);
@@ -24,6 +26,7 @@ void createBars(unsigned long int *, int num);
 void idleFunc(void);
 
 void quickSort (unsigned long int unsorted[], long int start, long int end_pos);
+void genRandNos(void);
 void printNos(void);
 
 int main(int argc, char *argv[])
@@ -38,8 +41,11 @@ int main(int argc, char *argv[])
     glutKeyboardFunc (keyboard);
     glutIdleFunc(idleFunc);
 
+    srand(time(NULL));
+    genRandNos();
+
     display();
-    quickSort(num,0,19);
+    quickSort(num,0,count-1);
     int i;
     for(i=0;i<20;i++)
 	printf("%lu\n",num[i]);
@@ -69,7 +75,7 @@ void display(void)
 
     glColor3f(FL_COLOR(16),FL_COLOR(148),FL_COLOR(148));
     
-    createBars(num,20);
+    createBars(num,count);
 //    glRectf(0.005f,BASELINE_Y,0.03f,0.9f);
     //  glRectf(0.035f,BASELINE_Y,0.06f,0.9f);
 
@@ -105,20 +111,30 @@ void reshape(int w, int h)
 
 void createBars(unsigned long int *values, int count)
 {
-    int i,max=0;
+    unsigned long int i,max=0;
     float xOffset=((float)count*0.03f)/2.0f;
-
+//    float xOffset=((float)count*0.015f)/2.0f;
     /* find max value to find y scale length */
+
     for(i=0;i<count;i++)
 	if(values[i]>max)
 	    max=values[i];
 
     for(i=0;i<count;i++)
     {
+	if (i==pIndex)
+	    glColor3f(FL_COLOR(150),FL_COLOR(81),FL_COLOR(81));
+	else
+	    glColor3f(FL_COLOR(16),FL_COLOR(148),FL_COLOR(148));
+
 	glRectf(i*0.03f-xOffset+0.005f,
 		BASELINE_Y,
 		(i+1)*0.03f-xOffset,
 		((float)values[i]/max)*(0.9f-BASELINE_Y)+BASELINE_Y);	
+/*	glRectf(i*0.015f-xOffset+0.002f,
+		BASELINE_Y,
+		(i+1)*0.015f-xOffset,
+		((float)values[i]/max)*(0.9f-BASELINE_Y)+BASELINE_Y);	*/
     }
 }
 
@@ -130,9 +146,9 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
 
     keyPress=0;
 
-//    usleep(300000);
+    usleep(300000);
 
-    getchar();
+    //getchar();
     printf("-> ");
     printNos();
 
@@ -149,6 +165,8 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
     if ( (unsorted[mid] >= unsorted[start] && unsorted[mid] <= unsorted[end]) ||
 	 (unsorted[mid] <= unsorted[start] && unsorted[mid] >= unsorted[end]))
     {
+	pIndex=mid;
+	display();
 	temp = unsorted[mid];
 	unsorted[mid] = unsorted[start];
 	unsorted[start] = temp;
@@ -156,9 +174,16 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
     else if ( (unsorted[end] >= unsorted[start] && unsorted[end] <= unsorted[mid]) ||
 	      (unsorted[end] <= unsorted[start] && unsorted[end] >= unsorted[mid]))
     {
+	pIndex=end;
+	display();
 	temp = unsorted[end];
 	unsorted[end] = unsorted[start];
 	unsorted[start] = temp;
+    }
+    else
+    {
+	pIndex=start;
+	display();
     }
 
     pivot = unsorted[0 + start];    //why?
@@ -204,4 +229,14 @@ void printNos(void)
 	printf("%lu ",num[i]);
 
     printf("\n");
+}
+
+void genRandNos(void)
+{
+    count=60;
+    int i;
+    num=(unsigned long int *)malloc(count*sizeof(unsigned long int));
+
+    for(i=0;i<count;i++)
+	num[i]=rand()%100+1;
 }
