@@ -5,6 +5,8 @@
 #define FL_COLOR(x) ((float)(x)/255.0f)
 #endif
 
+#define BASELINE_Y -0.05f
+
 GLfloat angle=0.0;
 GLfloat pos=0.0;
 void spin(void)
@@ -28,8 +30,8 @@ void display(void)
 
     glColor3f(0.2,0.5,0.8);
 
-    glRectf(0.005f,-0.5f,0.03f,0.9f);
-    glRectf(0.035f,-0.5f,0.06f,0.9f);
+    glRectf(0.005f,BASELINE_Y,0.03f,0.9f);
+    glRectf(0.035f,BASELINE_Y,0.06f,0.9f);
 
 //    glRectf(0.0f,0.0f,1.0f,-1.0f); //d
 
