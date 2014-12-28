@@ -24,6 +24,7 @@ void createBars(unsigned long int *, int num);
 void idleFunc(void);
 
 void quickSort (unsigned long int unsorted[], long int start, long int end_pos);
+void printNos(void);
 
 int main(int argc, char *argv[])
 {
@@ -66,7 +67,7 @@ void display(void)
 //    glScalef(0.5f, 1.0f, 2.0f); //works
 //    glutWireCube(2.0);
 
-    glColor3f(0.2,0.5,0.8);
+    glColor3f(FL_COLOR(16),FL_COLOR(148),FL_COLOR(148));
     
     createBars(num,20);
 //    glRectf(0.005f,BASELINE_Y,0.03f,0.9f);
@@ -129,6 +130,14 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
 
     keyPress=0;
 
+//    usleep(300000);
+
+    getchar();
+    printf("-> ");
+    printNos();
+
+    display();
+
     /* base case */
     if (arr_len < 2)
         return;
@@ -153,7 +162,7 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
     }
 
     pivot = unsorted[0 + start];    //why?
-    
+    printf("pivot: %lu",pivot);//d
     for (i = start + 1, j = start + 1; j < start + arr_len; j++)
     {
 	if (unsorted[j] <= pivot)
@@ -173,8 +182,7 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
 //    getchar();
 //    while(!keyPress)
 //	;
-    usleep(300000);
-    display();
+   
     quickSort (unsorted, 0 + start, i - 2);
     quickSort (unsorted, i, end);
 }
@@ -187,4 +195,13 @@ void idleFunc(void)
 	quickSort(num,0,19);
 //	done=1;
 }*/
+}
+
+void printNos(void)
+{
+    int i;
+    for(i=0;i<20;i++)
+	printf("%lu ",num[i]);
+
+    printf("\n");
 }
