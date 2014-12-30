@@ -14,6 +14,7 @@ GLfloat pos=0.0;
 
 int done=0;
 int keyPress=0, pIndex=-1;
+int pair[2];
 
 //unsigned long int num[]={10,4,6,20,10,7,2,14,9,4,5,20,11,2,7,13,1,3,19,4};
 unsigned long int *num,count;//[]={10,4,6,20,10,7,2,14,9,4,5,20,11,2,7,13,1,3,19,4};
@@ -22,7 +23,7 @@ void spin(void);
 void display(void);
 void keyboard(unsigned char key, int x, int y);
 void reshape(int w, int h);
-void createBars(unsigned long int *, int num);
+void createBars(unsigned long int *, int );
 void idleFunc(void);
 
 void quickSort (unsigned long int unsorted[], long int start, long int end_pos);
@@ -109,7 +110,7 @@ void reshape(int w, int h)
     glMatrixMode (GL_MODELVIEW);
 }
 
-void createBars(unsigned long int *values, int count)
+void createBars(unsigned long int *values, int count)//, int *pair)
 {
     unsigned long int i,max=0;
     float xOffset=((float)count*0.03f)/2.0f;
@@ -122,8 +123,8 @@ void createBars(unsigned long int *values, int count)
 
     for(i=0;i<count;i++)
     {
-	if (i==pIndex)
-	    glColor3f(FL_COLOR(150),FL_COLOR(81),FL_COLOR(81));
+	if (i==pair[0] || i==pair[1])
+            glColor3f(FL_COLOR(150),FL_COLOR(81),FL_COLOR(81)); //red
 	else
 	    glColor3f(FL_COLOR(16),FL_COLOR(148),FL_COLOR(148));
 
@@ -145,7 +146,7 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
     arr_len = end - start + 1;
 
     keyPress=0;
-
+    //    int pair[2];
     //    usleep(300000);
 
     //getchar();
@@ -192,13 +193,26 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
     {
 	if (unsorted[j] <= pivot)
 	{
+	    /* mark pair to be swapped */
+	    pair[0]=i;
+	    pair[1]=j;
+
+	    /* display before swap */
+	    display();
+	    usleep(200000);
+
+	    /* swap */
 	    temp = unsorted[j];
 	    unsorted[j] = unsorted[i];
 	    unsorted[i] = temp;
 
-	    /* update display */
+	    /* update display after swap */
 	    display();
 	    usleep(200000);
+
+	    /* no marked bars!! */
+	    pair[0]=-1;
+	    pair[1]=-1;
 
 	    i++;
 	}
