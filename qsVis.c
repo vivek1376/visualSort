@@ -146,13 +146,13 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
 
     keyPress=0;
 
-    usleep(300000);
+    //    usleep(300000);
 
     //getchar();
     printf("-> ");
     printNos();
 
-    display();
+    //    display();
 
     /* base case */
     if (arr_len < 2)
@@ -195,6 +195,11 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
 	    temp = unsorted[j];
 	    unsorted[j] = unsorted[i];
 	    unsorted[i] = temp;
+
+	    /* update display */
+	    display();
+	    usleep(200000);
+
 	    i++;
 	}
     }
@@ -203,6 +208,9 @@ void quickSort (unsigned long int unsorted[], long int start, long int end)
     unsorted[i - 1] = unsorted[0 + start];
     unsorted[0 + start] = temp;
 
+    /* update display */
+    display();
+    usleep(200000);
     // glutPostRedisplay();    
 //    getchar();
 //    while(!keyPress)
